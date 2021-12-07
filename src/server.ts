@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import { Api } from './modules/api';
-import { DB } from './modules/db/models';
+import { DB } from './modules/db';
+import { Logger } from './modules/logger/logger';
 
 const PORT: number = 5000;
 const ORIGIN_URL: string = `http://localhost:${PORT}`;
@@ -12,6 +13,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+Logger.init();
 DB.init();
 Api.init(app);
 

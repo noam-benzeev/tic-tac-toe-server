@@ -1,26 +1,26 @@
-import { dbConfig } from '../config/db-config';
-import { game } from './game/game.model';
-import { move } from './move/move.model';
-import { user } from './user/user.model';
+import { dbConfig } from './config/db-config';
+import { game } from './models/game/game.model';
+import { move } from './models/move/move.model';
+import { user } from './models/user/user.model';
 const Sequelize = require('sequelize');
 
 export class DB {
-    static db: any;
+    static models: any;
     private static sequelize: any;
 
     static init(): void {
         DB.initConfig();
         DB.initModels();
-        DB.sequelize.sync({ force: true }).then(() => {
-            console.log(`Database & tables created!`);
+        DB.sequelize.sync().then(() => {
+            console.log(`Succeed connect to Database`);
         });
     }
 
     private static initConfig(): void {
         DB.sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+            logging: false,
             host: dbConfig.HOST,
             dialect: dbConfig.dialect,
-            operatorsAliases: false,
             pool: {
                 max: dbConfig.pool.max,
                 min: dbConfig.pool.min,
@@ -31,7 +31,7 @@ export class DB {
     }
 
     private static initModels(): void {
-        DB.db = {
+        DB.models = {
             Sequelize,
             sequelize: DB.sequelize,
             game: game(DB.sequelize, Sequelize),

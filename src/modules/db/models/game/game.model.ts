@@ -9,6 +9,11 @@ export const game = (sequelize: any, Sequelize: any) => sequelize.define("game",
         type: Sequelize.BOOLEAN,
         field: 'is_active',
         defaultValue: false
+    },
+    isFinished: {
+        type: Sequelize.BOOLEAN,
+        field: 'is_finished',
+        defaultValue: false
     }
 }, {
     tableName: 'Games'
