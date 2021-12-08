@@ -1,7 +1,6 @@
-import log from "loglevel";
-import { DB } from "..";
-import { User } from "../../../types/interfaces/user";
-import { Logger } from "../../logger/logger";
+import { DB } from "../..";
+import { User } from "../../../../types/interfaces/user";
+import { Logger } from "../../../logger/logger";
 
 export class UserController {
     static async getAllUsers(): Promise<User[] | null> {
@@ -24,15 +23,14 @@ export class UserController {
         return user;
     }
 
-    static async createUser(newUser: User): Promise<boolean> {
-        let succeed: boolean = false;
+    static async createUser(newUser: User): Promise<User | null> {
+        let createdUser: User | null = null;
         try {
-            await DB.models.user.create(newUser);
-            succeed = true;
+            createdUser = await DB.models.user.create(newUser);
         } catch (error: any) {
             Logger.error(`Faild to create new user in DB. User data: ${JSON.stringify(newUser)}. Error: ${error}`, 'UserController.createUser');
         }
-        return succeed;
+        return createdUser;
     }
 
     static async updateUser(userId:number, updatedFields: Partial<User>): Promise<boolean> {

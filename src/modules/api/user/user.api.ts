@@ -1,7 +1,7 @@
 import express from "express";
 import { Status } from "../../../types/enums/status";
 import { User } from "../../../types/interfaces/user";
-import { UserController } from "../../db/controllers/user.controller";
+import { UserController } from "../../db/controllers/user/user.controller";
 import { Logger } from "../../logger/logger";
 
 export class UserApi {
@@ -22,7 +22,7 @@ export class UserApi {
         } else {
             res.status(Status.ERROR).send({
                 succeed: false,
-                message: "Error occurred while getting all users"
+                message: 'Error occurred while getting all users'
             });
         }
     }
@@ -37,7 +37,7 @@ export class UserApi {
         } else {
             res.status(Status.ERROR).send({
                 succeed: false,
-                message: "Error occurred while getting user"
+                message: 'Error occurred while getting user'
             });
         }
     }
@@ -45,14 +45,14 @@ export class UserApi {
     private static async create(req: any, res: any): Promise<void> {
         const newUser: User = req.body;
         Logger.info(`Got request to create new user. User name: ${newUser.name}`, 'UserApi.create');
-        const succeed: boolean = await UserController.createUser(newUser);
-        if (succeed) {
-            res.send({succeed});
+        const createdUser: User | null = await UserController.createUser(newUser);
+        if (createdUser) {
+            res.send({succeed: true});
             Logger.debug(`Succeed to create new user. User name: ${newUser.name}`, 'UserApi.create');
         } else {
             res.status(Status.ERROR).send({
-                succeed,
-                message: "Error occurred while creating the user"
+                succeed: false,
+                message: 'Error occurred while creating the user'
             });
             Logger.warn(`Faild to create new user. User: ${JSON.stringify(newUser)}`, 'UserApi.create');
         }
@@ -68,7 +68,7 @@ export class UserApi {
         } else {
             res.status(Status.ERROR).send({
                 succeed,
-                message: "Error occurred while updating the user"
+                message: 'Error occurred while updating the user'
             });
             Logger.warn(`Faild to update user (id: ${id}). Update fields: ${JSON.stringify(fields)}`, 'UserApi.update');
         }
@@ -84,7 +84,7 @@ export class UserApi {
         } else {
             res.status(Status.ERROR).send({
                 succeed,
-                message: "Error occurred while deleting the user"
+                message: 'Error occurred while deleting the user'
             });
             Logger.warn(`Faild to delete user. User id: ${id}`, 'UserApi.delete');
         }
