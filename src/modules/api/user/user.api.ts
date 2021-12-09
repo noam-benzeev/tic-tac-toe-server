@@ -13,11 +13,11 @@ export class UserApi {
         app.post('/api/users/delete', UserApi.delete);
     }
 
-    private static async getAll(req: any, res: any): Promise<void> {
+    private static async getAll(_: any, res: any): Promise<void> {
         Logger.info('Got request to get all users', 'UserApi.getAll');
         const users: User[] | null = await UserController.getAllUsers();
         if (users) {
-            res.send({succeed: true, data: users});
+            res.send({ succeed: true, data: users });
             Logger.debug('Succeed to get all users', 'UserApi.getAll');
         } else {
             res.status(Status.ERROR).send({
@@ -32,13 +32,14 @@ export class UserApi {
         Logger.info(`Got request to get user with id '${id}'`, 'UserApi.getById');
         const user: User | null = await UserController.getUserById(id);
         if (user) {
-            res.send({succeed: true, data: user});
+            res.send({ succeed: true, data: user });
             Logger.debug(`Succeed to get user with id '${id}'`, 'UserApi.getById');
         } else {
             res.status(Status.ERROR).send({
                 succeed: false,
                 message: 'Error occurred while getting user'
             });
+            Logger.warn(`Faild to get user with id '${id}'`, 'UserApi.create');
         }
     }
 
@@ -47,7 +48,7 @@ export class UserApi {
         Logger.info(`Got request to create new user. User name: ${newUser.name}`, 'UserApi.create');
         const createdUser: User | null = await UserController.createUser(newUser);
         if (createdUser) {
-            res.send({succeed: true});
+            res.send({ succeed: true });
             Logger.debug(`Succeed to create new user. User name: ${newUser.name}`, 'UserApi.create');
         } else {
             res.status(Status.ERROR).send({
@@ -59,11 +60,11 @@ export class UserApi {
     }
 
     private static async update(req: any, res: any): Promise<void> {
-        const {id, fields}:{id:number, fields:Partial<User>} = req.body;
+        const { id, fields }: { id: number, fields: Partial<User> } = req.body;
         Logger.info(`Got request to update user. User id: ${id}`, 'UserApi.update');
         const succeed: boolean = await UserController.updateUser(id, fields);
         if (succeed) {
-            res.send({succeed});
+            res.send({ succeed });
             Logger.debug(`Succeed to update user. User id: ${id}`, 'UserApi.update');
         } else {
             res.status(Status.ERROR).send({
@@ -79,7 +80,7 @@ export class UserApi {
         Logger.info(`Got request to delete user. User id: ${id}`, 'UserApi.delete');
         const succeed: boolean = await UserController.deleteUser(id);
         if (succeed) {
-            res.send({succeed});
+            res.send({ succeed });
             Logger.debug(`Succeed to delete user. User id: ${id}`, 'UserApi.delete');
         } else {
             res.status(Status.ERROR).send({

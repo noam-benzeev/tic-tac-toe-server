@@ -10,9 +10,9 @@ export const user = (sequelize: any, Sequelize: any) => sequelize.define("user",
         field: 'name',
         allowNull: false
     },
-    currentGame: {
+    currentGameId: {
         type: Sequelize.INTEGER,
-        field: 'current_game',
+        field: 'current_game_id',
         allowNull: true
     }
 }, {

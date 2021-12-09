@@ -1,5 +1,8 @@
-export interface User {
-    id: number;
+export interface CreateUser {
     name: string;
-    currentGame: number;
+}
+
+export interface User extends CreateUser {
+    id: number;
+    currentGameId?: number;
 }

@@ -2,11 +2,11 @@ import { dbConfig } from './config/db-config';
 import { game } from './models/game/game.model';
 import { move } from './models/move/move.model';
 import { user } from './models/user/user.model';
-const Sequelize = require('sequelize');
+import * as Sequelize from 'sequelize';
 
 export class DB {
     static models: any;
-    private static sequelize: any;
+    static sequelize: Sequelize.Sequelize;
 
     static init(): void {
         DB.initConfig();
@@ -17,7 +17,7 @@ export class DB {
     }
 
     private static initConfig(): void {
-        DB.sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+        DB.sequelize = new Sequelize.Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
             logging: false,
             host: dbConfig.HOST,
             dialect: dbConfig.dialect,
@@ -33,7 +33,6 @@ export class DB {
     private static initModels(): void {
         DB.models = {
             Sequelize,
-            sequelize: DB.sequelize,
             game: game(DB.sequelize, Sequelize),
             user: user(DB.sequelize, Sequelize),
             move: move(DB.sequelize, Sequelize)

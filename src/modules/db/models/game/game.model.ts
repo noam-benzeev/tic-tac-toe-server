@@ -14,6 +14,11 @@ export const game = (sequelize: any, Sequelize: any) => sequelize.define("game",
         type: Sequelize.BOOLEAN,
         field: 'is_finished',
         defaultValue: false
+    },
+    nextMove: {
+        type: Sequelize.INTEGER,
+        field: 'next_move',
+        allowNull: true
     }
 }, {
     tableName: 'Games'
