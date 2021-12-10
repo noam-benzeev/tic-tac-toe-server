@@ -3,8 +3,9 @@ import { GameStatusOptions } from "../../../types/enums/game-status";
 import { Status } from "../../../types/enums/status";
 import { Game } from "../../../types/interfaces/game";
 import { GameStatus } from "../../../types/interfaces/game-status";
-import { CreateMove } from "../../../types/interfaces/move";
+import { CreateMove, Move } from "../../../types/interfaces/move";
 import { GameController } from "../../db/controllers/game/game.controller";
+import { MoveController } from "../../db/controllers/move/move.controller";
 import { Logger } from "../../logger/logger";
 import { GameResolver } from "./game.resolver";
 
@@ -12,6 +13,7 @@ export class GameApi {
     static init(app: express.Application): void {
         app.get('/api/games/pendings', GameApi.getPendingsGames);
         app.get('/api/games/:id', GameApi.getById);
+        app.get('/api/games/:id/moves', GameApi.getGameMoves);
         app.get('/api/games/:id/status', GameApi.getGameStatus);
         app.post('/api/games/create', GameApi.create);
         app.post('/api/games/join', GameApi.joinToGame);
@@ -45,6 +47,22 @@ export class GameApi {
                 message: 'Error occurred while getting game'
             });
             Logger.warn(`Faild to get game with id '${id}'`, 'GameApi.getById');
+        }
+    }
+
+    private static async getGameMoves(req: any, res: any): Promise<void> {
+        const id: number = req.params.id;
+        Logger.info(`Got request to get game moves. Game Id: '${id}'`, 'GameApi.getGameMoves');
+        const moves: Move[] | null = await MoveController.getAllGameMoves(id);
+        if (moves) {
+            res.send({ succeed: true, data: moves });
+            Logger.debug(`Succeed to get game moves. Game Id: '${id}'`, 'GameApi.getGameMoves');
+        } else {
+            res.status(Status.ERROR).send({
+                succeed: false,
+                message: 'Error occurred while getting game moves'
+            });
+            Logger.warn(`Faild to get game moves. Game Id: '${id}'`, 'GameApi.getGameMoves');
         }
     }
 
