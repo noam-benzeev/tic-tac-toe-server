@@ -1,4 +1,6 @@
-export const game = (sequelize: any, Sequelize: any) => sequelize.define("game", {
+import * as Sequelize from 'sequelize';
+
+export const game = (sequelize: Sequelize.Sequelize) => sequelize.define("game", {
     id: {
         type: Sequelize.INTEGER,
         field: 'id',
@@ -19,7 +21,12 @@ export const game = (sequelize: any, Sequelize: any) => sequelize.define("game",
         type: Sequelize.INTEGER,
         field: 'next_move',
         allowNull: true
+    },
+    winner: {
+        type: Sequelize.INTEGER,
+        field: 'winner',
+        allowNull: true
     }
 }, {
-    tableName: 'Games'
+    tableName: 'games'
 });

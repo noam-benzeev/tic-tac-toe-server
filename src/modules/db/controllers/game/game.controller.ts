@@ -1,8 +1,10 @@
 import { Transaction } from "sequelize/dist";
 import { DB } from "../..";
-import { GameModeStatus } from "../../../../types/enums/gameModeStatus";
+import { GameStatusOptions } from "../../../../types/enums/game-status";
 import { Game } from "../../../../types/interfaces/game";
+import { GameStatus } from "../../../../types/interfaces/game-status";
 import { Logger } from "../../../logger/logger";
+import { user } from "../../models/user/user.model";
 
 export class GameController {
     static async getPendingsGames(transaction?: Transaction): Promise<Game[] | null> {
@@ -31,19 +33,19 @@ export class GameController {
         return game;
     }
 
-    static async getGameModeStatusById(id:number, transaction?: Transaction): Promise<GameModeStatus> {
+    static async getGameStatusById(id:number, transaction?: Transaction): Promise<GameStatus> {
         const game: Game | null = await GameController.getGameById(id, transaction);
-        let status: GameModeStatus = GameModeStatus.NOT_EXIST;
+        let status: GameStatusOptions = GameStatusOptions.NOT_EXIST;
         if (game) {
             if (!game.isActive && !game.isFinished) {
-                status = GameModeStatus.PENDING;
+                status = GameStatusOptions.PENDING;
             } else if (game.isActive) {
-                status = GameModeStatus.ACTIVE;
+                status = GameStatusOptions.ACTIVE;
             } else if (game.isFinished) {
-                status = GameModeStatus.FINISH;
+                status = GameStatusOptions.FINISH;
             }
         }
-        return status;
+        return {status, ...(game?.winner && {winner: game.winner})};
     }
 
     static async createGame(transaction?: Transaction): Promise<Game | null> {

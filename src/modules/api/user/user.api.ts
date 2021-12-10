@@ -39,7 +39,7 @@ export class UserApi {
                 succeed: false,
                 message: 'Error occurred while getting user'
             });
-            Logger.warn(`Faild to get user with id '${id}'`, 'UserApi.create');
+            Logger.warn(`Faild to get user with id '${id}'`, 'UserApi.getById');
         }
     }
 

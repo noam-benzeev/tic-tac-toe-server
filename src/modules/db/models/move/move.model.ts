@@ -1,4 +1,6 @@
-export const move = (sequelize: any, Sequelize: any) => sequelize.define("move", {
+import * as Sequelize from 'sequelize';
+
+export const move = (sequelize: Sequelize.Sequelize) => sequelize.define("move", {
     id: {
         type: Sequelize.INTEGER,
         field: 'id',
@@ -26,5 +28,5 @@ export const move = (sequelize: any, Sequelize: any) => sequelize.define("move",
         allowNull: false
     }
 }, {
-    tableName: 'Moves'
+    tableName: 'moves'
 });

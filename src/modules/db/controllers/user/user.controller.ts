@@ -60,6 +60,19 @@ export class UserController {
         return succeed;
     }
 
+    static async updateUsers(gameId:number, updatedFields: Partial<User>, transaction?: Transaction): Promise<boolean> {
+        let succeed: boolean = false;
+        try {            
+            succeed = !!(await DB.models.user.update(updatedFields, {
+                where: {currentGameId: gameId},
+                ...(transaction && {transaction})
+            }))[0];
+        } catch (error: any) {
+            Logger.error(`Faild to update users by game (${gameId}) in DB. Update fields: ${JSON.stringify(updatedFields)}. ${error}`, 'UserController.updateUser');
+        }
+        return succeed;
+    }
+
     static async deleteUser(userId: number, transaction?: Transaction): Promise<boolean> {
         let succeed: boolean = false;
         try {

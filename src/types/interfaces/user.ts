@@ -4,5 +4,5 @@ export interface CreateUser {
 
 export interface User extends CreateUser {
     id: number;
-    currentGameId?: number;
+    currentGameId: number | null;
 }

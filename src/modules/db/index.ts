@@ -32,10 +32,9 @@ export class DB {
 
     private static initModels(): void {
         DB.models = {
-            Sequelize,
-            game: game(DB.sequelize, Sequelize),
-            user: user(DB.sequelize, Sequelize),
-            move: move(DB.sequelize, Sequelize)
+            game: game(DB.sequelize),
+            user: user(DB.sequelize),
+            move: move(DB.sequelize)
         };
     }
 }

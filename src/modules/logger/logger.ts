@@ -1,6 +1,6 @@
 import log, { LogLevelDesc } from "loglevel";
 
-const DEFAULT_LOGGER_LEVEL:LogLevelDesc = 'info';
+const DEFAULT_LOGGER_LEVEL:LogLevelDesc = 'debug';
 
 export class Logger {
     static init(): void {

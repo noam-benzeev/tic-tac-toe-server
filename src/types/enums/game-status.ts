@@ -1,4 +1,4 @@
-export enum GameModeStatus {
+export enum GameStatusOptions {
     PENDING = 'PENDING',
     ACTIVE = 'ACTIVE',
     FINISH = 'FINISH',

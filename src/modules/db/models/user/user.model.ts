@@ -1,4 +1,6 @@
-export const user = (sequelize: any, Sequelize: any) => sequelize.define("user", {
+import * as Sequelize from 'sequelize';
+
+export const user = (sequelize: Sequelize.Sequelize) => sequelize.define("user", {
     id: {
         type: Sequelize.INTEGER,
         field: 'id',
@@ -16,5 +18,5 @@ export const user = (sequelize: any, Sequelize: any) => sequelize.define("user",
         allowNull: true
     }
 }, {
-    tableName: 'Users'
+    tableName: 'users'
 });

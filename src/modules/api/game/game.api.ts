@@ -1,6 +1,8 @@
 import express from "express";
+import { GameStatusOptions } from "../../../types/enums/game-status";
 import { Status } from "../../../types/enums/status";
 import { Game } from "../../../types/interfaces/game";
+import { GameStatus } from "../../../types/interfaces/game-status";
 import { CreateMove } from "../../../types/interfaces/move";
 import { GameController } from "../../db/controllers/game/game.controller";
 import { Logger } from "../../logger/logger";
@@ -9,7 +11,8 @@ import { GameResolver } from "./game.resolver";
 export class GameApi {
     static init(app: express.Application): void {
         app.get('/api/games/pendings', GameApi.getPendingsGames);
-        app.get('/api/games/status/:id', () => { });
+        app.get('/api/games/:id', GameApi.getById);
+        app.get('/api/games/:id/status', GameApi.getGameStatus);
         app.post('/api/games/create', GameApi.create);
         app.post('/api/games/join', GameApi.joinToGame);
         app.post('/api/games/move', GameApi.makeMove);
@@ -29,6 +32,38 @@ export class GameApi {
         }
     }
 
+    private static async getById(req: any, res: any): Promise<void> {
+        const id: number = req.params.id;
+        Logger.info(`Got request to get game with id '${id}'`, 'GameApi.getById');
+        const game: Game | null = await GameController.getGameById(id);
+        if (game) {
+            res.send({ succeed: true, data: game });
+            Logger.debug(`Succeed to get game with id '${id}'`, 'GameApi.getById');
+        } else {
+            res.status(Status.ERROR).send({
+                succeed: false,
+                message: 'Error occurred while getting game'
+            });
+            Logger.warn(`Faild to get game with id '${id}'`, 'GameApi.getById');
+        }
+    }
+
+    private static async getGameStatus(req: any, res: any): Promise<void> {
+        const gameId: number = req.params.id;
+        Logger.info(`Got request to get game status. Game Id: ${gameId}`, 'GameApi.getGameStatus');
+        const gameStatus: GameStatus = await GameController.getGameStatusById(gameId);
+        if (gameStatus.status !== GameStatusOptions.NOT_EXIST) {
+            res.send({ succeed: true, data: gameStatus });
+            Logger.debug(`Succeed to get game status. Game Id: ${gameId}`, 'GameApi.getGameStatus');
+        } else {
+            res.status(Status.ERROR).send({
+                succeed: false,
+                message: 'Error occurred while getting game status'
+            });
+            Logger.warn(`Failed to get game status. Game Id '${gameId}'`, 'GameApi.getGameStatus');
+        }
+    }
+
     private static async create(req: any, res: any): Promise<void> {
         const userId: number = req.body.userId;
         Logger.info(`Got request to create new game by user. User Id '${userId}'`, 'GameApi.create');
@@ -45,7 +80,7 @@ export class GameApi {
     }
 
     private static async joinToGame(req: any, res: any): Promise<void> {
-        const {userId, gameId}: {userId: number, gameId: number} = req.body;
+        const { userId, gameId }: { userId: number, gameId: number } = req.body;
         Logger.info(`Got request to add user (${userId}) to game (${gameId})`, 'GameApi.joinToGame');
         if (await GameResolver.handleJoinToGame(userId, gameId)) {
             res.send({ succeed: true });

@@ -3,4 +3,5 @@ export interface Game {
     isActive: boolean;
     isFinished: boolean;
     nextMove?: number;
+    winner?: number;
 }
